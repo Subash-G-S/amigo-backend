@@ -129,9 +129,7 @@ async def forgot_password(
         raise HTTPException(status_code=404, detail="No account found with this email.")
 
     otp = save_otp(request.email)
-
-    background_tasks.add_task(
-        send_otp_email,
+    await send_otp_email(
         request.email,
         otp,
     )
