@@ -16,9 +16,7 @@ def save_otp(
     email: str,
 ):
     # Delete previous OTPs
-    db.query(OTP).filter(
-        OTP.email == email
-    ).delete()
+    db.query(OTP).filter(OTP.email == email).delete()
 
     otp = generate_otp()
 

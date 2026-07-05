@@ -1,5 +1,6 @@
-from sqlalchemy import Column, String, DateTime
+from sqlalchemy import Column, DateTime, String
 from sqlalchemy.sql import func
+
 from app.database.database import Base
 
 
@@ -26,8 +27,4 @@ class User(Base):
         DateTime(timezone=True),
         server_default=func.now(),
     )
-    bio = Column(
-        String,
-        nullable=True,
-        default=""
-    )
+    bio = Column(String, nullable=True, default="")

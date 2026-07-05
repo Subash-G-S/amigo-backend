@@ -1,27 +1,28 @@
+import os
 from uuid import uuid4
 
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException, Security
 from fastapi.security import HTTPBearer
-from jose import jwt, JWTError
+from jose import JWTError, jwt
 from sqlalchemy.orm import Session
-from app.models.user import User
 
 from app.database.database import get_db
 from app.models.comment import Comment
 from app.models.post import Post
+from app.models.user import User
 from app.schemas.comment_schema import CreateComment
 
 router = APIRouter()
 
 security = HTTPBearer()
 
-from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
+
 
 @router.post("/create/{post_id}")
 def create_comment(
@@ -48,11 +49,7 @@ def create_comment(
             detail="Invalid token",
         )
 
-    post = (
-        db.query(Post)
-        .filter(Post.id == post_id)
-        .first()
-    )
+    post = db.query(Post).filter(Post.id == post_id).first()
 
     if not post:
         raise HTTPException(
@@ -70,9 +67,9 @@ def create_comment(
     db.add(new_comment)
     db.commit()
 
-    return {
-        "message": "Comment added successfully"
-    }
+    return {"message": "Comment added successfully"}
+
+
 @router.get("/{post_id}")
 def get_comments(
     post_id: str,
@@ -91,11 +88,13 @@ def get_comments(
 
     for comment, user in comments:
 
-        response.append({
-            "id": comment.id,
-            "author": user.name,
-            "content": comment.content,
-            "created_at": comment.created_at,
-        })
+        response.append(
+            {
+                "id": comment.id,
+                "author": user.name,
+                "content": comment.content,
+                "created_at": comment.created_at,
+            }
+        )
 
     return response

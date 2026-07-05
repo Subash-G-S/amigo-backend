@@ -1,8 +1,10 @@
+import os
 from uuid import uuid4
 
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException, Security
 from fastapi.security import HTTPBearer
-from jose import jwt, JWTError
+from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
@@ -10,8 +12,6 @@ from app.models.like import Like
 from app.models.post import Post
 
 security = HTTPBearer()
-from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
@@ -19,6 +19,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 
 router = APIRouter()
+
 
 @router.post("/{post_id}/like")
 def like_post(
@@ -45,11 +46,7 @@ def like_post(
             detail="Invalid Token",
         )
 
-    post = (
-        db.query(Post)
-        .filter(Post.id == post_id)
-        .first()
-    )
+    post = db.query(Post).filter(Post.id == post_id).first()
 
     if not post:
         raise HTTPException(
@@ -84,6 +81,8 @@ def like_post(
     return {
         "message": "Post liked",
     }
+
+
 @router.delete("/{post_id}/like")
 def unlike_post(
     post_id: str,

@@ -1,15 +1,15 @@
+import os
 from uuid import uuid4
 
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException, Security
 from fastapi.security import HTTPBearer
-from jose import jwt, JWTError
+from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
 from app.models.follow import Follow
 from app.models.user import User
-from dotenv import load_dotenv
-import os
 
 router = APIRouter()
 
@@ -50,11 +50,7 @@ def follow_user(
             detail="You cannot follow yourself.",
         )
 
-    user = (
-        db.query(User)
-        .filter(User.id == user_id)
-        .first()
-    )
+    user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
         raise HTTPException(
@@ -90,6 +86,8 @@ def follow_user(
         "success": True,
         "message": "User followed",
     }
+
+
 @router.delete("/{user_id}")
 def unfollow_user(
     user_id: str,
@@ -135,6 +133,8 @@ def unfollow_user(
         "success": True,
         "message": "User unfollowed",
     }
+
+
 @router.get("/is-following/{user_id}")
 def is_following(
     user_id: str,
@@ -167,9 +167,9 @@ def is_following(
         .first()
     )
 
-    return {
-        "following": follow is not None
-    }
+    return {"following": follow is not None}
+
+
 @router.get("/followers/{user_id}")
 def get_followers(
     user_id: str,
@@ -197,6 +197,8 @@ def get_followers(
         }
         for user in followers
     ]
+
+
 @router.get("/following/{user_id}")
 def get_following(
     user_id: str,

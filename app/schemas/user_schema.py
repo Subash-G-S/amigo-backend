@@ -1,5 +1,6 @@
-from pydantic import BaseModel, EmailStr, field_validator
 import re
+
+from pydantic import BaseModel, EmailStr, field_validator
 
 
 class RegisterUser(BaseModel):
@@ -13,11 +14,10 @@ class RegisterUser(BaseModel):
         pattern = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]*students\.amrita\.edu$"
 
         if not re.match(pattern, value):
-            raise ValueError(
-                "Only Amrita student email addresses are allowed."
-            )
+            raise ValueError("Only Amrita student email addresses are allowed.")
 
         return value
+
     @field_validator("password")
     @classmethod
     def validate_password(cls, value):
@@ -42,8 +42,6 @@ class RegisterUser(BaseModel):
 class LoginUser(BaseModel):
     email: EmailStr
     password: str
-
-from pydantic import EmailStr
 
 
 class ForgotPasswordRequest(BaseModel):

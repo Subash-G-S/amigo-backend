@@ -1,8 +1,8 @@
-from sqlalchemy import Column, String, ForeignKey, DateTime
 from datetime import datetime
 
-from app.database.database import Base
+from sqlalchemy import Column, DateTime, ForeignKey, String
 
+from app.database.database import Base
 
 
 class Follow(Base):
