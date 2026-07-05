@@ -39,5 +39,7 @@ async def send_otp_email(
         print("Email successfully sent")
 
     except Exception as e:
-        print("MAIL ERROR:", repr(e))
-        raise
+        import traceback
+
+        print("MAIL ERROR:", str(e))
+        traceback.print_exc()
