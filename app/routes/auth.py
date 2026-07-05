@@ -10,7 +10,6 @@ from sqlalchemy.orm import Session
 
 from app.database.database import get_db
 from app.models.follow import Follow
-from app.models.otp import OTP
 from app.models.post import Post
 from app.models.user import User
 from app.schemas.profile_schema import UpdateProfile
@@ -129,10 +128,7 @@ async def forgot_password(
     if not user:
         raise HTTPException(status_code=404, detail="No account found with this email.")
 
-    otp = save_otp(
-        db=db,
-        email=request.email,
-    )
+    otp = save_otp(request.email)
 
     background_tasks.add_task(
         send_otp_email,
@@ -149,7 +145,6 @@ def verify_otp_route(
     db: Session = Depends(get_db),
 ):
     valid = verify_otp(
-        db,
         request.email,
         request.otp,
     )
@@ -180,8 +175,6 @@ def reset_password(
         raise HTTPException(status_code=404, detail="User not found.")
 
     user.password = hash_password(request.new_password)
-
-    db.query(OTP).filter(OTP.email == request.email).delete()
 
     db.commit()
 

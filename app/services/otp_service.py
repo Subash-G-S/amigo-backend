@@ -1,58 +1,36 @@
 import random
-from datetime import datetime, timedelta
-from uuid import uuid4
 
-from sqlalchemy.orm import Session
-
-from app.models.otp import OTP
+from app.services.redis_otp_service import (
+    delete_otp,
+    get_otp,
+)
+from app.services.redis_otp_service import save_otp as redis_save_otp
 
 
 def generate_otp():
     return str(random.randint(100000, 999999))
 
 
-def save_otp(
-    db: Session,
-    email: str,
-):
-    # Delete previous OTPs
-    db.query(OTP).filter(OTP.email == email).delete()
-
+def save_otp(email: str):
     otp = generate_otp()
 
-    new_otp = OTP(
-        id=str(uuid4()),
-        email=email,
-        otp=otp,
-        expires_at=datetime.utcnow() + timedelta(minutes=10),
-    )
-
-    db.add(new_otp)
-    db.commit()
+    redis_save_otp(email, otp)
 
     return otp
 
 
 def verify_otp(
-    db: Session,
     email: str,
     otp: str,
 ):
-    record = (
-        db.query(OTP)
-        .filter(
-            OTP.email == email,
-            OTP.otp == otp,
-        )
-        .first()
-    )
+    stored_otp = get_otp(email)
 
-    if not record:
+    if stored_otp is None:
         return False
 
-    if record.expires_at < datetime.utcnow():
-        db.delete(record)
-        db.commit()
+    if stored_otp != otp:
         return False
+
+    delete_otp(email)
 
     return True
