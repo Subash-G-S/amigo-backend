@@ -7,7 +7,9 @@ __pycache__/
 
 # Compiled Extensions
 *.so
-
+credentials.json
+token.json
+generate_token.py
 # ===========================
 # Virtual Environment
 # ===========================
