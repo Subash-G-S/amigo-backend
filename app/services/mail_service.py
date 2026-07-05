@@ -22,15 +22,22 @@ async def send_otp_email(
     email: str,
     otp: str,
 ):
-    message = MessageSchema(
-        subject="AMIGO Password Reset OTP",
-        recipients=[email],
-        body=f"Your AMIGO OTP is: {otp}",
-        subtype="plain",
-    )
+    try:
+        message = MessageSchema(
+            subject="AMIGO Password Reset OTP",
+            recipients=[email],
+            body=f"Your AMIGO OTP is: {otp}",
+            subtype="plain",
+        )
 
-    fm = FastMail(conf)
-    print("Sending OTP:", otp)
+        fm = FastMail(conf)
 
-    await fm.send_message(message)
-    print("Email successfully sent")
+        print("Sending OTP:", otp)
+
+        await fm.send_message(message)
+
+        print("Email successfully sent")
+
+    except Exception as e:
+        print("MAIL ERROR:", repr(e))
+        raise
