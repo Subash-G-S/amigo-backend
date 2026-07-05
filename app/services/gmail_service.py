@@ -17,9 +17,6 @@ def send_otp_email(email: str, otp: str):
     if creds.expired and creds.refresh_token:
         creds.refresh(Request())
 
-        with open("token.json", "w") as token:
-            token.write(creds.to_json())
-
     service = build("gmail", "v1", credentials=creds)
 
     message = MIMEText(f"Your AMIGO OTP is: {otp}")
