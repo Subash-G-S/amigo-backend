@@ -17,6 +17,4 @@ def prepare_google_files():
         )
 
     if token:
-        Path("token.json").write_text(
-            json.dumps(json.loads(token), indent=2)
-        )
+        Path("token.json").write_text(json.dumps(json.loads(token), indent=2))

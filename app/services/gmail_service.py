@@ -28,9 +28,7 @@ def send_otp_email(email: str, otp: str):
     message["from"] = "amigoamrita@gmail.com"
     message["subject"] = "AMIGO Password Reset OTP"
 
-    raw = base64.urlsafe_b64encode(
-        message.as_bytes()
-    ).decode()
+    raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
 
     service.users().messages().send(
         userId="me",

@@ -20,8 +20,8 @@ from app.schemas.user_schema import (
     ResetPasswordRequest,
     VerifyOTPRequest,
 )
-from app.services.jwt_service import create_access_token
 from app.services.gmail_service import send_otp_email
+from app.services.jwt_service import create_access_token
 from app.services.otp_service import save_otp, verify_otp
 from app.services.security import hash_password, verify_password
 
