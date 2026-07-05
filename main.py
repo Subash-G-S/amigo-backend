@@ -15,7 +15,7 @@ app = FastAPI(title="Amigo API", version="1.0.0")
 # Root route
 @app.get("/")
 def root():
-    return {"message": "Amigo Backend Running"}
+    return {"message": "Deploy render running"}
 
 
 # Auth routes

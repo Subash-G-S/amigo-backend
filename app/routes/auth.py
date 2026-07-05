@@ -117,7 +117,6 @@ def check_email(email: str, db: Session = Depends(get_db)):
 def health():
     return {"status": "online", "service": "AMIGO API"}
 
-
 @router.post("/forgot-password")
 async def forgot_password(
     request: ForgotPasswordRequest,
