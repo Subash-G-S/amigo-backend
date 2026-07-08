@@ -11,6 +11,8 @@ class User(Base):
 
     name = Column(String, nullable=False)
 
+    profile_picture = Column(String, nullable=True)
+
     email = Column(
         String,
         unique=True,
