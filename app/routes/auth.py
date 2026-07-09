@@ -280,9 +280,11 @@ def my_profile(
         "name": user.name,
         "email": user.email,
         "bio": user.bio or "",
+        "profile_picture": user.profile_picture,
         "posts": posts,
         "followers": followers,
         "following": following,
+        
     }
 
 
