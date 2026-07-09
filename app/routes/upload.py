@@ -26,10 +26,14 @@ async def upload_profile_photo(
     credentials=Security(security),
     db: Session = Depends(get_db),
 ):
-    if not image.content_type.startswith("image/"):
+    print("Filename:", image.filename)
+    print("Content-Type:", image.content_type)
+    allowed_extensions = (".jpg", ".jpeg", ".png", ".webp")
+    filename = image.filename.lower()
+    if not filename.endswith(allowed_extensions):
         raise HTTPException(
             status_code=400,
-            detail="Only image files are allowed.",
+            detail="Only JPG, JPEG, PNG and WEBP images are allowed.",
         )
 
     token = credentials.credentials
