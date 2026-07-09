@@ -284,7 +284,6 @@ def my_profile(
         "posts": posts,
         "followers": followers,
         "following": following,
-        
     }
 
 

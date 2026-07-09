@@ -5,8 +5,9 @@ from app.routes.auth import router as auth_router
 from app.routes.comment import router as comment_router
 from app.routes.like import router as like_router
 from app.routes.post import router as post_router
-from app.services.google_auth import prepare_google_files
 from app.routes.upload import router as upload_router
+from app.services.google_auth import prepare_google_files
+
 prepare_google_files()
 
 app = FastAPI(title="Amigo API", version="1.0.0")
