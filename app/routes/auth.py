@@ -32,6 +32,7 @@ ALGORITHM = os.getenv("ALGORITHM")
 router = APIRouter()
 
 
+# ------------------------------REGISTER----------------------------------------
 @router.post("/register")
 def register_user(user: RegisterUser, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(User.email == user.email).first()
@@ -52,6 +53,7 @@ def register_user(user: RegisterUser, db: Session = Depends(get_db)):
     return {"success": True, "message": "Account created successfully."}
 
 
+# ------------------------------LOGIN----------------------------------------
 @router.post("/login")
 def login_user(user: LoginUser, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(User.email == user.email).first()
@@ -81,6 +83,7 @@ def login_user(user: LoginUser, db: Session = Depends(get_db)):
 security = HTTPBearer()
 
 
+# ------------------------------GET ME----------------------------------------
 @router.get("/me")
 def get_me(credentials=Security(security), db: Session = Depends(get_db)):
     token = credentials.credentials
@@ -105,6 +108,7 @@ def get_me(credentials=Security(security), db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid token")
 
 
+# CHECK EMAIL AVAILABILITY---------------------------------------------
 @router.get("/check-email/{email}")
 def check_email(email: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == email).first()
@@ -112,11 +116,13 @@ def check_email(email: str, db: Session = Depends(get_db)):
     return {"available": user is None}
 
 
+# ------------------------------HEALTH CHECK----------------------------------------
 @router.get("/health")
 def health():
     return {"status": "online", "service": "AMIGO API"}
 
 
+# ------------------------------FORGOT PASSWORD----------------------------------------
 @router.post("/forgot-password")
 async def forgot_password(
     request: ForgotPasswordRequest,
@@ -137,6 +143,7 @@ async def forgot_password(
     return {"success": True, "message": "OTP sent successfully."}
 
 
+# ------------------------------VERIFY OTP----------------------------------------
 @router.post("/verify-otp")
 def verify_otp_route(
     request: VerifyOTPRequest,
@@ -153,6 +160,7 @@ def verify_otp_route(
     return {"success": True, "message": "OTP verified."}
 
 
+# ------------------------------RESET PASSWORD----------------------------------------
 @router.post("/reset-password")
 def reset_password(
     request: ResetPasswordRequest,
@@ -179,6 +187,7 @@ def reset_password(
     return {"success": True, "message": "Password reset successfully."}
 
 
+# ------------------------------SEARCH----------------------------------------
 @router.get("/search")
 def search_users(
     q: str,
@@ -205,6 +214,7 @@ def search_users(
     ]
 
 
+# ------------------------------GET USER PROFILE----------------------------------------
 @router.get("/user/{user_id}")
 def get_user_profile(
     user_id: str,
@@ -235,6 +245,7 @@ def get_user_profile(
     }
 
 
+# ------------------------------PROFILE----------------------------------------
 @router.get("/profile")
 def my_profile(
     credentials=Security(security),
@@ -287,6 +298,7 @@ def my_profile(
     }
 
 
+# ------------------------------UPDATE PROFILE----------------------------------------
 @router.put("/profile")
 def update_profile(
     data: UpdateProfile,

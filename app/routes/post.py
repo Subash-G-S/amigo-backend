@@ -106,3 +106,35 @@ def get_feed(credentials=Security(security), db: Session = Depends(get_db)):
         )
 
     return feed
+
+
+@router.get("/me")
+def get_my_posts(
+    credentials=Security(security),
+    db: Session = Depends(get_db),
+):
+    token = credentials.credentials
+
+    try:
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM],
+        )
+
+        user_id = payload["sub"]
+
+    except JWTError:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid Token",
+        )
+
+    posts = (
+        db.query(Post)
+        .filter(Post.user_id == user_id)
+        .order_by(Post.created_at.desc())
+        .all()
+    )
+
+    return posts
