@@ -172,4 +172,4 @@ def get_my_posts(
             }
         )
 
-    return posts
+    return my_posts
